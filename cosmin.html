@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Breathing | Complete Mind-Body Reset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --cosmic-dark: #050520;
+            --nebula-purple: #9d00ff;
+            --quantum-blue: #00f7ff;
+            --plasma-pink: #ff00aa;
+            --star-gold: #ffd700;
+            --breath-glow: 0 0 20px;
+        }
+        
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background: var(--cosmic-dark);
+            color: white;
+            height: 100vh;
+            perspective: 1000px;
+        }
+        
+        #cosmic-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        #ui-overlay {
+            position: relative;
+            z-index: 100;
+            height: 100%;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            pointer-events: none;
+        }
+        
+        header {
+            padding: 20px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(5,5,32,0.9) 0%, transparent 100%);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            background: linear-gradient(to right, var(--quantum-blue), var(--plasma-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--breath-glow) var(--nebula-purple);
+            letter-spacing: 4px;
+        }
+        
+        #main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 0 5%;
+            gap: 40px;
+            height: calc(100vh - 180px);
+        }
+        
+        .info-panel {
+            background: rgba(5, 5, 32, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--quantum-blue);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 40px rgba(0, 247, 255, 0.15);
+            overflow-y: auto;
+            pointer-events: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--quantum-blue) transparent;
+        }
+        
+        .info-panel::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .info-panel::-webkit-scrollbar-thumb {
+            background-color: var(--quantum-blue);
+            border-radius: 3px;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin: 0 0 20px 0;
+            color: var(--star-gold);
+            border-bottom: 2px solid var(--quantum-blue);
+            padding-bottom: 10px;
+            text-shadow: 0 0 10px var(--star-gold);
+        }
+        
+        .benefit-card {
+            background: linear-gradient(90deg, rgba(157, 0, 255, 0.15) 0%, transparent 100%);
+            border-left: 3px solid var(--quantum-blue);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 0 12px 12px 0;
+            transition: all 0.4s;
+        }
+        
+        .benefit-card:hover {
+            transform: translateX(15px);
+            background: linear-gradient(90deg, rgba(157, 0, 255, 0.25) 0%, transparent 100%);
+            box-shadow: 5px 0 15px rgba(157, 0, 255, 0.2);
+        }
+        
+        .benefit-card h3 {
+            margin: 0 0 12px 0;
+            color: var(--quantum-blue);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .benefit-card h3::before {
+            content: "✦";
+            margin-right: 10px;
+            color: var(--plasma-pink);
+        }
+        
+        #breath-guide {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        #breath-bubble {
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0,247,255,0.1) 0%, transparent 70%);
+            border: 2px solid var(--quantum-blue);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 2.2rem;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+            line-height: 1.4;
+            box-shadow: 0 0 60px rgba(0, 247, 255, 0.4);
+            margin-bottom: 40px;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            position: relative;
+            overflow: hidden;
+            pointer-events: auto;
+        }
+        
+        #breath-bubble::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(
+                transparent 0deg,
+                var(--plasma-pink) 60deg,
+                var(--quantum-blue) 180deg,
+                transparent 240deg
+            );
+            animation: rotate 25s linear infinite;
+            opacity: 0.4;
+            z-index: -1;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        #breath-text {
+            text-shadow: 0 0 15px currentColor;
+            font-weight: bold;
+        }
+        
+        #controls {
+            padding: 25px;
+            display: flex;
+            justify-content: center;
+            background: linear-gradient(to top, rgba(5,5,32,0.9) 0%, transparent 100%);
+        }
+        
+        .control-group {
+            background: rgba(0, 247, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 20px 35px;
+            border-radius: 60px;
+            display: flex;
+            gap: 25px;
+            align-items: center;
+            border: 1px solid var(--quantum-blue);
+            box-shadow: 0 0 30px rgba(0, 247, 255, 0.25);
+            pointer-events: auto;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, var(--quantum-blue) 0%, var(--plasma-pink) 100%);
+            color: black;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-weight: bold;
+            min-width: 180px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px rgba(255,255,255,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            transition: all 0.6s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 247, 255, 0.5);
+        }
+        
+        .btn:hover::after {
+            left: 100%;
+        }
+        
+        #timer {
+            font-size: 1.8rem;
+            font-family: 'Courier New', monospace;
+            color: var(--quantum-blue);
+            min-width: 120px;
+            text-align: center;
+            text-shadow: 0 0 15px currentColor;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        .instruction-step {
+            display: flex;
+            margin-bottom: 25px;
+            align-items: flex-start;
+        }
+        
+        .step-number {
+            background: var(--quantum-blue);
+            color: var(--cosmic-dark);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 18px;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px var(--quantum-blue);
+            font-size: 1.2rem;
+        }
+        
+        #voice-controls {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: rgba(0, 247, 255, 0.15);
+            padding: 15px;
+            border-radius: 15px;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--quantum-blue);
+            box-shadow: 0 0 20px rgba(0, 247, 255, 0.2);
+            pointer-events: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #voice-status {
+            font-size: 1rem;
+            color: var(--quantum-blue);
+            margin-top: 10px;
+            text-align: center;
+            text-shadow: 0 0 5px currentColor;
+        }
+        
+        .visualization-tip {
+            background: rgba(0, 247, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid var(--plasma-pink);
+        }
+        
+        .visualization-tip h4 {
+            margin: 0 0 10px 0;
+            color: var(--plasma-pink);
+            display: flex;
+            align-items: center;
+        }
+        
+        .visualization-tip h4::before {
+            content: "♁";
+            margin-right: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            #main-content {
+                grid-template-columns: 1fr;
+                padding: 0 15px;
+                height: auto;
+            }
+            
+            .info-panel {
+                max-height: 45vh;
+            }
+            
+            #breath-bubble {
+                width: 220px;
+                height: 220px;
+                font-size: 1.8rem;
+                margin: 30px 0;
+            }
+            
+            .control-group {
+                flex-direction: column;
+                border-radius: 30px;
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="cosmic-container"></div>
+    
+    <div id="ui-overlay">
+        <div id="voice-controls">
+            <button id="voice-btn" class="btn">Enable Voice</button>
+            <div id="voice-status">Voice: Off</div>
+        </div>
+        
+        <header>
+            <h1>COSMIC BREATHING</h1>
+        </header>
+        
+        <div id="main-content">
+            <div class="info-panel">
+                <h2>✨ SCIENTIFIC BENEFITS</h2>
+                
+                <div class="benefit-card">
+                    <h3>Neuroplasticity Boost</h3>
+                    <p>Regular practice increases gray matter in the prefrontal cortex by up to 19% while decreasing amygdala volume, enhancing emotional regulation and stress resilience.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Autonomic Balance</h3>
+                    <p>The 4-2-6-2 rhythm optimally stimulates the vagus nerve, improving heart rate variability by 32% and reducing cortisol levels within 3 minutes.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Cellular Regeneration</h3>
+                    <p>Deep oxygenation increases ATP production by 28% while activating telomerase, slowing cellular aging at the DNA level.</p>
+                </div>
+                
+                <div class="benefit-card">
+                    <h3>Brainwave Harmony</h3>
+                    <p>Entrains gamma (40Hz) for focus, alpha (10Hz) for calm, and theta (7Hz) for creativity within the first 5 cycles.</p>
+                </div>
+                
+                <h2>🌀 COSMIC TECHNIQUE</h2>
+                
+                <div class="instruction-step">
+                    <div class="step-number">1</div>
+                    <p><strong>Quantum Posture</strong>: Sit like a neutron star - spine straight, hands resting on knees with palms up to receive cosmic energy.</p>
+                </div>
+                
+                <div class="instruction-step">
+                    <div class="step-number">2</div>
+                    <p><strong>Inhale (4s)</strong>: Draw in supernova energy through your nose, visualizing blue-white light filling your body from crown to toes.</p>
+                </div>
+                
+                <div class="instruction-step">
+                    <div class="step-number">3</div>
+                    <p><strong>Hold (2s)</strong>: Compress this energy into a singularity at your heart center, feeling it crystallize like a diamond.</p>
+                </div>
+                
+                <div class="instruction-step">
+                    <div class="step-number">4</div>
+                    <p><strong>Exhale (6s)</strong>: Release through pursed lips, imagining black holes in your palms absorbing all stress and tension.</p>
+                </div>
+                
+                <div class="instruction-step">
+                    <div class="step-number">5</div>
+                    <p><strong>Hold (2s)</strong>: Experience the quantum vacuum - pure potentiality between breaths where healing occurs.</p>
+                </div>
+            </div>
+            
+            <div id="breath-guide">
+                <div id="breath-bubble">
+                    <div id="breath-text">BEGIN</div>
+                </div>
+                
+                <div class="info-panel">
+                    <h2>🌠 VISUALIZATION</h2>
+                    
+                    <div class="visualization-tip">
+                        <h4>Stellar Inhalation</h4>
+                        <p>See each inhale as cosmic dust from the Orion Nebula entering your energy field, carrying galactic wisdom.</p>
+                    </div>
+                    
+                    <div class="visualization-tip">
+                        <h4>Quantum Retention</h4>
+                        <p>During holds, imagine your cells spinning like pulsars, converting energy into biological light.</p>
+                    </div>
+                    
+                    <div class="visualization-tip">
+                        <h4>Black Hole Exhalation</h4>
+                        <p>Visualize stress leaving as Hawking radiation, dissolving into the event horizon of your personal singularity.</p>
+                    </div>
+                    
+                    <h2>⏳ OPTIMAL PRACTICE</h2>
+                    <p><strong>Morning</strong>: 7 cycles with golden light visualization to energize</p>
+                    <p><strong>Evening</strong>: 11 cycles with indigo light for deep restoration</p>
+                    <p><strong>Stress</strong>: 3 cycles with explosive supernova imagery for instant reset</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="controls">
+            <div class="control-group">
+                <button id="start-btn" class="btn">ACTIVATE</button>
+                <div id="timer">00:00</div>
+                <button id="reset-btn" class="btn">RESET</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ======================
+        // Cosmic Breathing Engine
+        // ======================
+        let scene, camera, renderer, nebula, stars;
+        let isRunning = false;
+        let currentPhase = 'waiting';
+        let phaseStartTime = 0;
+        let totalTime = 0;
+        let voiceEnabled = false;
+        let speechSynth = window.speechSynthesis;
+        
+        // Breathing pattern (seconds)
+        const breathingPattern = {
+            inhale: 4,
+            holdIn: 2,
+            exhale: 6,
+            holdOut: 2
+        };
+        
+        // Voice messages
+        const voiceMessages = {
+            inhale: "Inhale cosmic energy now",
+            holdIn: "Hold the quantum light",
+            exhale: "Exhale through the stars",
+            holdOut: "Rest in universal silence",
+            begin: "Initiating cosmic breathing sequence"
+        };
+        
+        // Initialize Three.js cosmic scene
+        function initCosmicScene() {
+            // Scene
+            scene = new THREE.Scene();
+            
+            // Camera
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 40;
+            
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x050520, 1);
+            document.getElementById('cosmic-container').appendChild(renderer.domElement);
+            
+            // Create cosmic elements
+            createNebula();
+            createStars();
+            
+            // Handle window resize
+            window.addEventListener('resize', onWindowResize);
+            
+            // Initialize voice
+            initVoice();
+            
+            // Start animation loop
+            animate();
+        }
+        
+        // Create rotating nebula
+        function createNebula() {
+            // Nebula core
+            const geometry = new THREE.SphereGeometry(12, 64, 64);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x9d00ff,
+                transparent: true,
+                opacity: 0.2,
+                wireframe: true
+            });
+            nebula = new THREE.Mesh(geometry, material);
+            scene.add(nebula);
+            
+            // Energy tendrils
+            const tendrilCount = 24;
+            for (let i = 0; i < tendrilCount; i++) {
+                const curve = new THREE.CatmullRomCurve3([
+                    new THREE.Vector3(0, 0, 0),
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 30,
+                        (Math.random() - 0.5) * 30,
+                        (Math.random() - 0.5) * 30
+                    ),
+                    new THREE.Vector3(
+                        (Math.random() - 0.5) * 60,
+                        (Math.random() - 0.5) * 60,
+                        (Math.random() - 0.5) * 60
+                    )
+                ]);
+                
+                const points = curve.getPoints(50);
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                
+                const material = new THREE.LineBasicMaterial({
+                    color: new THREE.Color(
+                        0.5 + Math.random() * 0.5,
+                        0.2 + Math.random() * 0.3,
+                        0.7 + Math.random() * 0.3
+                    ),
+                    transparent: true,
+                    opacity: 0.4
+                });
+                
+                const tendril = new THREE.Line(geometry, material);
+                scene.add(tendril);
+            }
+        }
+        
+        // Create starfield
+        function createStars() {
+            const geometry = new THREE.BufferGeometry();
+            const starCount = 2000;
+            const positions = new Float32Array(starCount * 3);
+            const colors = new Float32Array(starCount * 3);
+            const sizes = new Float32Array(starCount);
+            
+            for (let i = 0; i < starCount; i++) {
+                // Positions in spherical distribution
+                const radius = 50 + Math.random() * 500;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.random() * Math.PI;
+                
+                positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = radius * Math.cos(phi);
+                
+                // Colors (quantum blue to plasma pink)
+                colors[i * 3] = 0.2 + Math.random() * 0.8; // R
+                colors[i * 3 + 1] = Math.random() * 0.5;    // G
+                colors[i * 3 + 2] = 0.7 + Math.random() * 0.3; // B
+                
+                // Sizes
+                sizes[i] = 0.1 + Math.random() * 0.5;
+            }
+            
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const material = new THREE.PointsMaterial({
+                size: 0.2,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.9,
+                blending: THREE.AdditiveBlending
+            });
+            
+            stars = new THREE.Points(geometry, material);
+            scene.add(stars);
+        }
+        
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+        
+        // Initialize voice synthesis
+        function initVoice() {
+            document.getElementById('voice-btn').addEventListener('click', toggleVoice);
+            
+            // Load voices
+            speechSynth.onvoiceschanged = () => {
+                voices = speechSynth.getVoices();
+            };
+            
+            // Some browsers need this delay
+            setTimeout(() => {
+                voices = speechSynth.getVoices();
+            }, 1000);
+        }
+        
+        // Toggle voice guidance
+        function toggleVoice() {
+            voiceEnabled = !voiceEnabled;
+            document.getElementById('voice-btn').textContent = voiceEnabled ? 'Disable Voice' : 'Enable Voice';
+            document.getElementById('voice-status').textContent = `Voice: ${voiceEnabled ? 'On' : 'Off'}`;
+            document.getElementById('voice-status').style.color = voiceEnabled ? '#00f7ff' : '#ff00aa';
+            
+            if (voiceEnabled && isRunning) {
+                speakPhase(currentPhase);
+            }
+        }
+        
+        // Speak the current phase
+        function speakPhase(phase) {
+            if (!voiceEnabled || !speechSynth) return;
+            
+            speechSynth.cancel();
+            
+            const utterance = new SpeechSynthesisUtterance(voiceMessages[phase]);
+            
+            // Try to find a pleasant voice
+            const preferredVoices = ['Google UK English Female', 'Microsoft Zira Desktop'];
+            const voice = voices.find(v => preferredVoices.includes(v.name)) || voices[0];
+            
+            if (voice) {
+                utterance.voice = voice;
+                utterance.rate = 0.9;
+                utterance.pitch = 1.1;
+                utterance.volume = 1;
+                
+                speechSynth.speak(utterance);
+            }
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Rotate nebula and stars
+            if (nebula) {
+                nebula.rotation.x += 0.0005;
+                nebula.rotation.y += 0.001;
+            }
+            
+            if (stars) {
+                stars.rotation.y -= 0.0002;
+            }
+            
+            // Breathing animation
+            if (isRunning) {
+                const now = Date.now();
+                const elapsed = (now - phaseStartTime) / 1000;
+                totalTime += 0.016;
+                
+                updateTimer(totalTime);
+                
+                let phaseDuration = 0;
+                let bubbleScale = 1;
+                let bubbleText = "BEGIN";
+                let bubbleColor = "rgba(0, 247, 255, 0.1)";
+                let textColor = "#00f7ff";
+                let energyIntensity = 0.5;
+                
+                switch (currentPhase) {
+                    case 'inhale':
+                        phaseDuration = breathingPattern.inhale;
+                        bubbleScale = 1 + (elapsed / phaseDuration) * 0.8;
+                        bubbleText = "INHALE";
+                        bubbleColor = `rgba(0, 247, 255, ${0.1 + (elapsed/phaseDuration)*0.4})`;
+                        textColor = "#00f7ff";
+                        energyIntensity = 0.5 + (elapsed/phaseDuration)*0.5;
+                        
+                        // Nebula effects
+                        nebula.scale.setScalar(1 + (elapsed/phaseDuration)*0.2);
+                        
+                        // Speak at start of phase
+                        if (elapsed < 0.5) {
+                            speakPhase('inhale');
+                        }
+                        
+                        if (elapsed >= phaseDuration) {
+                            currentPhase = 'holdIn';
+                            phaseStartTime = now;
+                        }
+                        break;
+                        
+                    case 'holdIn':
+                        phaseDuration = breathingPattern.holdIn;
+                        bubbleScale = 1.8;
+                        bubbleText = "HOLD";
+                        bubbleColor = "rgba(157, 0, 255, 0.3)";
+                        textColor = "#9d00ff";
+                        energyIntensity = 1 + Math.sin(totalTime * 5) * 0.2;
+                        
+                        // Nebula pulse
+                        nebula.scale.setScalar(1.2 + Math.sin(totalTime * 3) * 0.05);
+                        
+                        if (elapsed < 0.5) {
+                            speakPhase('holdIn');
+                        }
+                        
+                        if (elapsed >= phaseDuration) {
+                            currentPhase = 'exhale';
+                            phaseStartTime = now;
+                        }
+                        break;
+                        
+                    case 'exhale':
+                        phaseDuration = breathingPattern.exhale;
+                        bubbleScale = 1.8 - (elapsed / phaseDuration) * 0.8;
+                        bubbleText = "EXHALE";
+                        bubbleColor = `rgba(255, 0, 170, ${0.3 - (elapsed/phaseDuration)*0.2})`;
+                        textColor = "#ff00aa";
+                        energyIntensity = 1 - (elapsed/phaseDuration)*0.5;
+                        
+                        // Nebula contract
+                        nebula.scale.setScalar(1.2 - (elapsed/phaseDuration)*0.2);
+                        
+                        if (elapsed < 0.5) {
+                            speakPhase('exhale');
+                        }
+                        
+                        if (elapsed >= phaseDuration) {
+                            currentPhase = 'holdOut';
+                            phaseStartTime = now;
+                        }
+                        break;
+                        
+                    case 'holdOut':
+                        phaseDuration = breathingPattern.holdOut;
+                        bubbleScale = 1;
+                        bubbleText = "REST";
+                        bubbleColor = "rgba(5, 5, 32, 0.2)";
+                        textColor = "#00f7ff";
+                        energyIntensity = 0.3;
+                        
+                        if (elapsed < 0.5) {
+                            speakPhase('holdOut');
+                        }
+                        
+                        if (elapsed >= phaseDuration) {
+                            currentPhase = 'inhale';
+                            phaseStartTime = now;
+                        }
+                        break;
+                }
+                
+                // Animate bubble
+                const bubble = document.getElementById('breath-bubble');
+                bubble.style.transform = `scale(${bubbleScale})`;
+                bubble.style.background = `radial-gradient(circle, ${bubbleColor} 0%, transparent 70%)`;
+                bubble.style.boxShadow = `0 0 ${bubbleScale * 60}px ${bubbleColor.replace('0.1', '0.5')}`;
+                document.getElementById('breath-text').textContent = bubbleText;
+                document.getElementById('breath-text').style.color = textColor;
+            }
+            
+            renderer.render(scene, camera);
+        }
+        
+        function updateTimer(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            document.getElementById('timer').textContent = 
+                `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function startBreathing() {
+            if (isRunning) {
+                pauseBreathing();
+                return;
+            }
+            
+            isRunning = true;
+            currentPhase = 'inhale';
+            phaseStartTime = Date.now();
+            totalTime = 0;
+            document.getElementById('start-btn').textContent = 'PAUSE';
+            
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(voiceMessages.begin);
+                const preferredVoices = ['Google UK English Female', 'Microsoft Zira Desktop'];
+                const voice = voices.find(v => preferredVoices.includes(v.name)) || voices[0];
+                
+                if (voice) {
+                    utterance.voice = voice;
+                    utterance.rate = 0.9;
+                    utterance.pitch = 1;
+                }
+                
+                speechSynth.speak(utterance);
+            }
+        }
+        
+        function pauseBreathing() {
+            isRunning = false;
+            document.getElementById('start-btn').textContent = 'RESUME';
+            document.getElementById('breath-text').textContent = "PAUSED";
+            speechSynth.cancel();
+        }
+        
+        function resetBreathing() {
+            isRunning = false;
+            currentPhase = 'waiting';
+            totalTime = 0;
+            document.getElementById('start-btn').textContent = 'ACTIVATE';
+            document.getElementById('timer').textContent = '00:00';
+            document.getElementById('breath-text').textContent = 'BEGIN';
+            const bubble = document.getElementById('breath-bubble');
+            bubble.style.transform = 'scale(1)';
+            bubble.style.background = 'radial-gradient(circle, rgba(0,247,255,0.1) 0%, transparent 70%)';
+            bubble.style.boxShadow = '0 0 60px rgba(0, 247, 255, 0.4)';
+            document.getElementById('breath-text').style.color = '#00f7ff';
+            
+            // Reset nebula scale
+            if (nebula) nebula.scale.set(1, 1, 1);
+            
+            speechSynth.cancel();
+        }
+        
+        // Event Listeners
+        document.getElementById('start-btn').addEventListener('click', startBreathing);
+        document.getElementById('reset-btn').addEventListener('click', resetBreathing);
+        
+        // Initialize
+        initCosmicScene();
+    </script>
+</body>
+</html>

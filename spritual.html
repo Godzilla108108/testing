@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shree Krishna Bhakti Dhyan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tangerine:wght@700&family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --peacock-blue: #016795;
+            --flute-gold: #FFD700;
+            --lotus-pink: #E6B0AA;
+            --krishna-blue: #1a237e;
+        }
+        
+        body {
+            font-family: 'Noto Sans Devanagari', sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            background: linear-gradient(to bottom, #000428, #1a237e);
+        }
+        
+        /* Cosmic Animation */
+        #cosmic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .star {
+            position: absolute;
+            background-color: white;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite ease-in-out;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        .om-symbol {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(255, 215, 0, 0.3);
+            animation: float 15s infinite linear;
+        }
+        
+        /* Krishna Silhouette */
+        .krishna-silhouette {
+            position: fixed;
+            right: 5%;
+            bottom: 10%;
+            width: 200px;
+            opacity: 0.1;
+            z-index: -1;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        header {
+            background: rgba(22, 22, 22, 0.7);
+            width: 100%;
+            text-align: center;
+            padding: 1.5rem 0;
+            border-bottom: 3px solid var(--flute-gold);
+            backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 3.5rem;
+            font-family: 'Tangerine', cursive;
+            text-shadow: 2px 2px 4px #000;
+            color: var(--flute-gold);
+        }
+        
+        .container {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem auto;
+            width: 85%;
+            max-width: 800px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        
+        .flute-player {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .flute-player img {
+            width: 180px;
+            filter: drop-shadow(0 0 10px var(--flute-gold));
+        }
+        
+        .player-container {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .track-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .track-title {
+            font-size: 1.5rem;
+            color: var(--flute-gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        .track-desc {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .control-btn {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--flute-gold);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 215, 0, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+            background: var(--flute-gold);
+            color: black;
+        }
+        
+        .play-btn:hover {
+            box-shadow: 0 0 20px var(--flute-gold);
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            margin: 1.5rem 0;
+            cursor: pointer;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: var(--flute-gold);
+            width: 0%;
+            border-radius: 3px;
+            position: relative;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 12px;
+            background: var(--flute-gold);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .progress-container:hover .progress-bar::after {
+            opacity: 1;
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+        
+        .playlist {
+            margin-top: 2rem;
+        }
+        
+        .playlist-item {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .playlist-item:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .playlist-item.active {
+            background: rgba(255, 215, 0, 0.2);
+            border-left: 3px solid var(--flute-gold);
+        }
+        
+        .playlist-item .title {
+            font-weight: bold;
+        }
+        
+        .playlist-item .duration {
+            opacity: 0.6;
+            font-size: 0.9rem;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            width: 100%;
+            background: rgba(22, 22, 22, 0.8);
+            text-align: center;
+            padding: 1.5rem 0;
+            font-size: 0.9rem;
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        .footer-mantra {
+            font-family: 'Tangerine', cursive;
+            font-size: 2rem;
+            color: var(--flute-gold);
+            margin-bottom: 0.5rem;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .krishna-silhouette {
+                width: 100px;
+            }
+            
+            .player-controls {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cosmic Background -->
+    <div id="cosmic-bg"></div>
+    
+    <!-- Krishna Silhouette -->
+    <img src="https://i.imgur.com/KrishnaSilhouette.png" alt="Krishna Silhouette" class="krishna-silhouette">
+    
+    <header>
+        <h1>Shree Krishna Bhakti Dhyan</h1>
+        <div class="subtitle">Immerse in Divine Sound</div>
+    </header>
+    
+    <div class="container">
+        <div class="flute-player">
+            <img src="https://i.imgur.com/KrishnaFlute.png" alt="Lord Krishna Playing Flute">
+        </div>
+        
+        <div class="player-container">
+            <div class="track-info">
+                <div class="track-title" id="current-track">Bhagavad Gita Chapter 2</div>
+                <div class="track-desc" id="current-desc">Verse 47 - Karmanye Vadhikaraste...</div>
+            </div>
+            
+            <div class="player-controls">
+                <button class="control-btn" id="prev-btn">⏮</button>
+                <button class="control-btn" id="rewind-btn">⏪</button>
+                <button class="control-btn play-btn" id="play-btn">▶</button>
+                <button class="control-btn" id="forward-btn">⏩</button>
+                <button class="control-btn" id="next-btn">⏭</button>
+            </div>
+            
+            <div class="progress-container" id="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            
+            <div class="time-display">
+                <span id="current-time">0:00</span>
+                <span id="duration">3:45</span>
+            </div>
+        </div>
+        
+        <div class="playlist">
+            <h3 style="color: var(--flute-gold); margin-bottom: 1rem; font-family: 'Tangerine', cursive; font-size: 2rem;">Spiritual Playlist</h3>
+            
+            <div class="playlist-item active" data-id="1">
+                <div class="title">Bhagavad Gita Chapter 2</div>
+                <div class="duration">3:45</div>
+            </div>
+            
+            <div class="playlist-item" data-id="2">
+                <div class="title">Krishna's Flute Meditation</div>
+                <div class="duration">15:00</div>
+            </div>
+            
+            <div class="playlist-item" data-id="3">
+                <div class="title">Radha-Krishna Katha</div>
+                <div class="duration">22:30</div>
+            </div>
+            
+            <div class="playlist-item" data-id="4">
+                <div class="title">Hare Krishna Mahamantra</div>
+                <div class="duration">10:15</div>
+            </div>
+            
+            <div class="playlist-item" data-id="5">
+                <div class="title">Govinda Jaya Jaya</div>
+                <div class="duration">5:20</div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-mantra">हरे कृष्ण हरे कृष्ण कृष्ण कृष्ण हरे हरे | हरे राम हरे राम राम राम हरे हरे ||</div>
+        <p>© 2023 Shree Krishna Bhakti Dhyan. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // Create cosmic background
+        function createCosmicBackground() {
+            const bg = document.getElementById('cosmic-bg');
+            
+            // Create stars
+            for (let i = 0; i < 200; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.width = `${Math.random() * 3}px`;
+                star.style.height = star.style.width;
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.setProperty('--duration', `${2 + Math.random() * 3}s`);
+                bg.appendChild(star);
+            }
+            
+            // Create floating OM symbols
+            for (let i = 0; i < 15; i++) {
+                const om = document.createElement('div');
+                om.className = 'om-symbol';
+                om.textContent = 'ॐ';
+                om.style.left = `${Math.random() * 100}%`;
+                om.style.top = `${Math.random() * 100}%`;
+                om.style.animationDelay = `${Math.random() * 5}s`;
+                om.style.fontSize = `${1 + Math.random() * 3}rem`;
+                bg.appendChild(om);
+            }
+        }
+        
+        // Audio Player Class
+        class BhaktiPlayer {
+            constructor() {
+                this.audio = new Audio();
+                this.playlist = [
+                    {
+                        id: 1,
+                        title: "Bhagavad Gita Chapter 2",
+                        desc: "Verse 47 - Karmanye Vadhikaraste...",
+                        duration: "3:45",
+                        src: "https://example.com/audio1.mp3"
+                    },
+                    {
+                        id: 2,
+                        title: "Krishna's Flute Meditation",
+                        desc: "15 minutes of peaceful flute music",
+                        duration: "15:00",
+                        src: "https://example.com/audio2.mp3"
+                    },
+                    {
+                        id: 3,
+                        title: "Radha-Krishna Katha",
+                        desc: "Story of divine love",
+                        duration: "22:30",
+                        src: "https://example.com/audio3.mp3"
+                    },
+                    {
+                        id: 4,
+                        title: "Hare Krishna Mahamantra",
+                        desc: "Chanting by devotees",
+                        duration: "10:15",
+                        src: "https://example.com/audio4.mp3"
+                    },
+                    {
+                        id: 5,
+                        title: "Govinda Jaya Jaya",
+                        desc: "Traditional bhajan",
+                        duration: "5:20",
+                        src: "https://example.com/audio5.mp3"
+                    }
+                ];
+                this.currentTrackIndex = 0;
+                this.isPlaying = false;
+                
+                this.init();
+            }
+            
+            init() {
+                this.setupElements();
+                this.setupEventListeners();
+                this.loadTrack(this.currentTrackIndex);
+                createCosmicBackground();
+            }
+            
+            setupElements() {
+                this.playBtn = document.getElementById('play-btn');
+                this.prevBtn = document.getElementById('prev-btn');
+                this.nextBtn = document.getElementById('next-btn');
+                this.rewindBtn = document.getElementById('rewind-btn');
+                this.forwardBtn = document.getElementById('forward-btn');
+                this.progressBar = document.getElementById('progress-bar');
+                this.progressContainer = document.getElementById('progress-container');
+                this.currentTimeEl = document.getElementById('current-time');
+                this.durationEl = document.getElementById('duration');
+                this.currentTrackEl = document.getElementById('current-track');
+                this.currentDescEl = document.getElementById('current-desc');
+                this.playlistItems = document.querySelectorAll('.playlist-item');
+            }
+            
+            setupEventListeners() {
+                this.playBtn.addEventListener('click', () => this.togglePlay());
+                this.prevBtn.addEventListener('click', () => this.prevTrack());
+                this.nextBtn.addEventListener('click', () => this.nextTrack());
+                this.rewindBtn.addEventListener('click', () => this.seek(-10));
+                this.forwardBtn.addEventListener('click', () => this.seek(10));
+                
+                this.progressContainer.addEventListener('click', (e) => {
+                    const rect = this.progressContainer.getBoundingClientRect();
+                    const pos = (e.clientX - rect.left) / rect.width;
+                    this.audio.currentTime = pos * this.audio.duration;
+                });
+                
+                this.audio.addEventListener('timeupdate', () => this.updateProgress());
+                this.audio.addEventListener('ended', () => this.nextTrack());
+                this.audio.addEventListener('loadedmetadata', () => {
+                    this.durationEl.textContent = this.formatTime(this.audio.duration);
+                });
+                
+                this.playlistItems.forEach(item => {
+                    item.addEventListener('click', () => {
+                        const id = parseInt(item.dataset.id);
+                        const index = this.playlist.findIndex(track => track.id === id);
+                        if (index !== -1) {
+                            this.currentTrackIndex = index;
+                            this.loadTrack(index);
+                            this.play();
+                        }
+                    });
+                });
+            }
+            
+            loadTrack(index) {
+                const track = this.playlist[index];
+                this.currentTrackEl.textContent = track.title;
+                this.currentDescEl.textContent = track.desc;
+                this.durationEl.textContent = track.duration;
+                
+                // In a real app, you would use the actual audio source
+                // this.audio.src = track.src;
+                
+                // For demo purposes, we'll use a silent audio
+                this.audio.src = "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+                
+                // Update active playlist item
+                this.playlistItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (parseInt(item.dataset.id) === track.id) {
+                        item.classList.add('active');
+                    }
+                });
+            }
+            
+            togglePlay() {
+                if (this.isPlaying) {
+                    this.pause();
+                } else {
+                    this.play();
+                }
+            }
+            
+            play() {
+                this.audio.play()
+                    .then(() => {
+                        this.isPlaying = true;
+                        this.playBtn.textContent = '⏸';
+                        this.playBtn.style.transform = 'scale(1.1)';
+                    })
+                    .catch(e => console.log("Playback failed:", e));
+            }
+            
+            pause() {
+                this.audio.pause();
+                this.isPlaying = false;
+                this.playBtn.textContent = '▶';
+                this.playBtn.style.transform = 'scale(1)';
+            }
+            
+            prevTrack() {
+                this.currentTrackIndex--;
+                if (this.currentTrackIndex < 0) {
+                    this.currentTrackIndex = this.playlist.length - 1;
+                }
+                this.loadTrack(this.currentTrackIndex);
+                this.play();
+            }
+            
+            nextTrack() {
+                this.currentTrackIndex++;
+                if (this.currentTrackIndex >= this.playlist.length) {
+                    this.currentTrackIndex = 0;
+                }
+                this.loadTrack(this.currentTrackIndex);
+                this.play();
+            }
+            
+            seek(seconds) {
+                this.audio.currentTime += seconds;
+            }
+            
+            updateProgress() {
+                const { currentTime, duration } = this.audio;
+                const progressPercent = (currentTime / duration) * 100;
+                this.progressBar.style.width = `${progressPercent}%`;
+                this.currentTimeEl.textContent = this.formatTime(currentTime);
+            }
+            
+            formatTime(seconds) {
+                if (isNaN(seconds)) return "0:00";
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+        }
+        
+        // Initialize the player when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new BhaktiPlayer();
+        });
+    </script>
+</body>
+</html>
